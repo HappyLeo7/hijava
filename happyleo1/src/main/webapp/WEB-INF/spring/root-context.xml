@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- [추가] <beans> 안에 mybatis링크와 context링크를 연결필요 -->
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd"
+	xmlns:mybatis-spring="http://mybatis.org/schema/mybatis-spring"
+	xmlns:context="http://www.springframework.org/schema/context">
+
+	<!-- Root Context: defines shared resources visible to all other web components -->
+
+
+
+	<!-- [추가] 스프링과 오라클을 연결하기위한 작업 -->
+	<!-- hikariConfig가 무엇일까요? -->
+	<bean id="hikariConfig" class="com.zaxxer.hikari.HikariConfig">
+		<!-- 드라이버 링크 -->
+		<property name="driverClassName"
+			value="net.sf.log4jdbc.sql.hdbcapi.DriverSpy" />
+		<!-- 오라클연결 링크 -->
+		<property name="jdbcUrl"
+			value="jdbc:log4jdbc:oracle:thin:@localhost:1521:xe" />
+		<!-- ID 입력 -->
+		<property name="username" value="happyleo" />
+		<property name="password" value="1234" />
+	</bean>
+
+
+	<bean id="daaSource" class="com.zaxxer.hikari.HikariDataSource"
+		destroy-method="close">
+		<constructor-arg ref="hikariConfig"></constructor-arg>
+	</bean>
+
+	<bean id="sqlSessionFactory"
+		class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource"/>
+
+	</bean>
+	<!--  -->
+	
+	<!-- [추가] mybatis의 베이직 경로 추가 -->
+	<mybatis-spring:scan base-package="com.happyleo.sqlAuthor"/> 
+
+</beans>
